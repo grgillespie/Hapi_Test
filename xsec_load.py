@@ -18,7 +18,6 @@ os.chdir('C:/Users/grgil/Documents/Hapi_Test/linelists')
 
 filename="C3H8.txt"
 
-
 with open(filename,'r') as f: #open the txt file
             
             # header data. Reads number of characters based on documentation in Hitran
