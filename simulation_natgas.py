@@ -9,6 +9,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import hapi as hapi
+from tqdm import tqdm #this is a progress bar thing
 
 plt.close('all')
 # Print the current working directory
@@ -182,3 +183,29 @@ secax.set_xlabel(r'Wavelength ($\mu$m)')
 ax1[1].set(ylim=(0, 1.2))
 ax1[1].set(xlim=(2850, 3075))
 #ax2.set_title(r'$P$=0.9 atm, $T$=294 K, $L$=1.1 cm', pad=20)
+
+#%% Sum the absorbance and plot transmission
+
+#Pad the ethane data with zeros
+numleft=round((nu1[0]-nu[0])/stepsize)
+numright=round((nu[-1]-nu1[-1])/stepsize)
+
+padded_coef1=np.pad(coef1, (numleft, numright), mode='constant', constant_values=0)
+
+common_nu= np.linspace(min(min(nu), min(nu1)), max(max(nu), max(nu1)), num=len(nu))
+
+methane_interp=np.interp(common_nu, nu, coef)
+ethane_interp=np.interp(common_nu, nu1, coef1)
+propane_interp=np.interp(common_nu, v, alpha)
+
+sum_alpha=methane_interp+ethane_interp+propane_interp
+
+trans=np.exp(-sum_alpha)
+
+fig, ax2=plt.subplots(tight_layout=True)
+ax2.plot(common_nu, trans)
+ax2.set_xlabel(r'Wavenumber (cm$^{-1}$)')
+ax2.set_ylabel('Transmission')
+secax=ax2.secondary_xaxis('top', functions=(wavelength_conversion, wavelength_conversion_rev))
+secax.set_xlabel(r'Wavelength (${\mu}$m)')
+
