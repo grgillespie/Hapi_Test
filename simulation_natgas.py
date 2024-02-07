@@ -57,9 +57,9 @@ mol_id=6
 iso=1
 molefraction=0.95
 name='CH4'
-pressure=0.9 #atm
-temperature=294 #K
-pathlength=1.1 #cm
+pressure=1.03 #atm
+temperature=298 #K
+pathlength=3.56 #cm
 stepsize=0.01 #wavelength step size in cm^-1
 #see spectra_single in td_support for the Diluent parameter, which is apparently better than the GammaL parameter.
 
@@ -74,9 +74,9 @@ mol_id=27
 iso=1
 molefraction=0.04
 name='C2H6'
-pressure=0.9 #atm
-temperature=294 #K
-pathlength=1.1 #cm
+pressure=1.03 #atm
+temperature=298 #K
+pathlength=3.56 #cm
 stepsize=0.01 #wavelength step size in cm^-1
 
 
@@ -126,12 +126,12 @@ with open(os.path.join(new_path,filename),'r') as f: #open the txt file
                    # error_log.append(f'{species_dir} | xsec: {xsec_index+1} | nPoints is too large')
                    
 
-T=294 #K
+T=298 #K
 R=8.3145 #J/molK
 Na=6.02214076e23
-P=0.9*101325 #Pa 
+P=1.03*101325 #Pa 
 molarfrac=0.01
-L=1.1 #cm
+L=3.56 #cm
 
 
 numden=Na*(P/(R*T))*molarfrac #molec/m^3
@@ -208,4 +208,13 @@ ax2.set_xlabel(r'Wavenumber (cm$^{-1}$)')
 ax2.set_ylabel('Transmission')
 secax=ax2.secondary_xaxis('top', functions=(wavelength_conversion, wavelength_conversion_rev))
 secax.set_xlabel(r'Wavelength (${\mu}$m)')
+ax2.set(xlim=(2600, 3200))
 
+fig, ax3=plt.subplots(tight_layout=True)
+ax3.plot(common_nu, sum_alpha)
+ax3.set_xlabel(r'Wavenumber (cm$^{-1}$)')
+ax3.set_ylabel('Absorbance')
+secax=ax3.secondary_xaxis('top', functions=(wavelength_conversion, wavelength_conversion_rev))
+secax.set_xlabel(r'Wavelength (${\mu}$m)')
+ax3.set(xlim=(2600, 3200))
+ax3.set(ylim=(-0.5,10))
