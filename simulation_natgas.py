@@ -57,16 +57,18 @@ mol_id=6
 iso=1
 molefraction=0.95
 name='CH4'
-pressure=1.03 #atm
+pressure=1.037 #atm
 temperature=298 #K
 pathlength=3.56 #cm
-stepsize=0.01 #wavelength step size in cm^-1
+stepsize=0.033 #wavelength step size in cm^-1
 #see spectra_single in td_support for the Diluent parameter, which is apparently better than the GammaL parameter.
 
 
 nu, coef = hapi.absorptionCoefficient_Voigt(((int(mol_id), int(iso), molefraction),),
             name, WavenumberStep=stepsize, HITRAN_units=False, GammaL='gamma_self',
-            Environment={'p':pressure,'T':temperature,'l':pathlength})
+            Environment={'p':pressure,'T':temperature})
+
+coef=coef*pathlength
 
 
 #%% Ethane
@@ -74,17 +76,17 @@ mol_id=27
 iso=1
 molefraction=0.04
 name='C2H6'
-pressure=1.03 #atm
+pressure=1.037 #atm
 temperature=298 #K
 pathlength=3.56 #cm
-stepsize=0.01 #wavelength step size in cm^-1
+stepsize=0.033 #wavelength step size in cm^-1
 
 
 nu1, coef1 = hapi.absorptionCoefficient_Voigt(((int(mol_id), int(iso), molefraction),),
             name, WavenumberStep=stepsize, HITRAN_units=False, GammaL='gamma_self',
-            Environment={'p':pressure,'T':temperature,'l':pathlength})
+            Environment={'p':pressure,'T':temperature})
 
-
+coef1=coef1*pathlength
 #%% Propane
 
 current_directory=os.getcwd()
@@ -129,7 +131,7 @@ with open(os.path.join(new_path,filename),'r') as f: #open the txt file
 T=298 #K
 R=8.3145 #J/molK
 Na=6.02214076e23
-P=1.03*101325 #Pa 
+P=1.037*101325 #Pa 
 molarfrac=0.01
 L=3.56 #cm
 
@@ -184,6 +186,22 @@ ax1[1].set(ylim=(0, 1.2))
 ax1[1].set(xlim=(2850, 3075))
 #ax2.set_title(r'$P$=0.9 atm, $T$=294 K, $L$=1.1 cm', pad=20)
 
+
+#%% Methane by itself
+'''
+fig,ax5 = plt.subplots(tight_layout=True)
+ax5.plot(nu,coef,label=r'CH$_4$, $X$=0.95')
+ax5.set_xlabel(r'Wavenumber (cm$^{-1}$)')
+ax5.set_ylabel('Absorbance')
+ax5.legend()
+secax=ax5.secondary_xaxis('top', functions=(wavelength_conversion, wavelength_conversion_rev))
+secax.set_xlabel(r'Wavelength (${\mu}$m)')
+ax5.set(xlim=(2200, 3333))
+#ax1[0].set_title(r'$P$=0.9 atm, $T$=294 K, $L$=1.1 cm', pad=20)
+ax5.set(xlim=(2600, 3250))
+ax5.set(ylim=(0, 10))
+
+'''
 #%% Sum the absorbance and plot transmission
 
 #Pad the ethane data with zeros
@@ -208,7 +226,7 @@ ax2.set_xlabel(r'Wavenumber (cm$^{-1}$)')
 ax2.set_ylabel('Transmission')
 secax=ax2.secondary_xaxis('top', functions=(wavelength_conversion, wavelength_conversion_rev))
 secax.set_xlabel(r'Wavelength (${\mu}$m)')
-ax2.set(xlim=(2600, 3200))
+ax2.set(xlim=(2631, 3236))
 
 fig, ax3=plt.subplots(tight_layout=True)
 ax3.plot(common_nu, sum_alpha)
@@ -216,5 +234,5 @@ ax3.set_xlabel(r'Wavenumber (cm$^{-1}$)')
 ax3.set_ylabel('Absorbance')
 secax=ax3.secondary_xaxis('top', functions=(wavelength_conversion, wavelength_conversion_rev))
 secax.set_xlabel(r'Wavelength (${\mu}$m)')
-ax3.set(xlim=(2600, 3200))
+ax3.set(xlim=(2631, 3236))
 ax3.set(ylim=(-0.5,10))
