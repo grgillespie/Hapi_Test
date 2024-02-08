@@ -236,3 +236,6 @@ secax=ax3.secondary_xaxis('top', functions=(wavelength_conversion, wavelength_co
 secax.set_xlabel(r'Wavelength (${\mu}$m)')
 ax3.set(xlim=(2631, 3236))
 ax3.set(ylim=(-0.5,10))
+
+
+#%%
